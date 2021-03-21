@@ -17,7 +17,7 @@ namespace SqlManagmentStudio.Windows.SqlClient
         {
             if (string.IsNullOrEmpty(serverName))
             {
-                MessageBoxWrapper.ShowAnErrorForm("Server name is empty", "Please provide a server name.");
+                MessageBoxWrapper.ShowErrorBox("Server name is empty", "Please provide a server name.");
                 return null;
             }
 
@@ -26,7 +26,7 @@ namespace SqlManagmentStudio.Windows.SqlClient
 
             if (!isValidConnectionString)
             {
-                MessageBoxWrapper.ShowAnErrorForm("Invalid server name", "Please provide a valid server name.");
+                MessageBoxWrapper.ShowErrorBox("Invalid server name", "Please provide a valid server name.");
                 return null;
             }
 
@@ -36,7 +36,7 @@ namespace SqlManagmentStudio.Windows.SqlClient
         {
             if (string.IsNullOrEmpty(serverName) || string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
             {
-                MessageBoxWrapper.ShowAnErrorForm("Fill the boxes", "Please fill all the boxes, before connecting to the server.");
+                MessageBoxWrapper.ShowErrorBox("Fill the boxes", "Please fill all the boxes, before connecting to the server.");
                 return null;
             }
 
@@ -45,7 +45,7 @@ namespace SqlManagmentStudio.Windows.SqlClient
 
             if (!isValidConnectionString)
             {
-                MessageBoxWrapper.ShowAnErrorForm("Invalid server name", "Please provide a valid server name.");
+                MessageBoxWrapper.ShowErrorBox("Invalid server name", "Please provide a valid server name.");
                 return null;
             }
 

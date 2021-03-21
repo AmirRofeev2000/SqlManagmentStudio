@@ -10,7 +10,7 @@ namespace SqlManagmentStudio.Windows
     {
         private ISqlServerClient _sqlServerClient;
         private IServerAuthentication _serverAuthentication;
-
+        private delegate void SafeLoadTree();
         public SqlManagerForm(ISqlServerClient sqlServerClient, IServerAuthentication serverAuthentication)
         {
             InitializeComponent();
@@ -42,7 +42,6 @@ namespace SqlManagmentStudio.Windows
         }
         public async Task ConnectToTheServer(string connectionString)
         {
-
             connectToServer_Btn.Enabled = false;
             await _sqlServerClient.ConnectToServerAsync(connectionString);
             EnableUIElements();
@@ -57,8 +56,8 @@ namespace SqlManagmentStudio.Windows
         }
         private void EnableUIElements()
         {
-            hierarchy_TreeView.Nodes.Add(_sqlServerClient.GetServerPathAsTreeNode());
-            hierarchy_TreeView.Enabled = true;
+
+            LoadTree();
 
             databases_combo.Items.AddRange(_sqlServerClient.DataBasesNames.ToArray());
             databases_combo.Enabled = true;
@@ -88,6 +87,12 @@ namespace SqlManagmentStudio.Windows
             sqlQueryResult_GridView.DataSource = null;
 
             connectToServer_Btn.Text = "Connect";
+        }
+        private void LoadTree()
+        {
+            hierarchy_TreeView.Enabled = true;
+            TreeNode returnedTreeNode = _sqlServerClient.GetServerPathAsTreeNode();
+            hierarchy_TreeView.Nodes.Add(returnedTreeNode);
         }
     }
 }

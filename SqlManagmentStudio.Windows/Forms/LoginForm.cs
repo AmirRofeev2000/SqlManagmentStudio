@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using SqlManagmentStudio.Windows.SqlClient;
+using SqlManagmentStudio.Windows.SqlClient.Utilities;
 using SqlManagmentStudio.Windows.Utilities;
 
 namespace SqlManagmentStudio.Windows
@@ -15,6 +16,12 @@ namespace SqlManagmentStudio.Windows
             InitializeComponent();
 
             string[] dataSourceNames = SqlServerInfo.GetDataSourceName().ToArray();
+            
+            if (dataSourceNames is null)
+            {
+                MessageBoxWrapper.ShowErrorBox("None Sql Server Instances","No Sql Server Instances were found in your computer");
+            }
+
             serverName_Dropdown.Items.AddRange(dataSourceNames);
             authenticationType_ComboBox.SelectedIndex = 0;
             serverName_Dropdown.SelectedIndex = 0;
@@ -45,8 +52,8 @@ namespace SqlManagmentStudio.Windows
                 {
                     if (Application.OpenForms["SqlManagerForm"] != null)
                     {
-                        await (Application.OpenForms["SqlManagerForm"] as SqlManagerForm).ConnectToTheServer(connectionString);
                         this.Close();
+                        await (Application.OpenForms["SqlManagerForm"] as SqlManagerForm).ConnectToTheServer(connectionString);
                     }
                 }
             }
@@ -58,8 +65,8 @@ namespace SqlManagmentStudio.Windows
                 {
                     if (Application.OpenForms["SqlManagerForm"] != null)
                     {
-                        await (Application.OpenForms["SqlManagerForm"] as SqlManagerForm).ConnectToTheServer(connectionString);
                         this.Close();
+                        await (Application.OpenForms["SqlManagerForm"] as SqlManagerForm).ConnectToTheServer(connectionString);
                     }
                 }
             }
