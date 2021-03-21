@@ -23,10 +23,10 @@ namespace SqlManagmentStudio.Windows.Utilities
             }
             catch
             {
-                connectionString = $"Data Source={serverName}/SQLEXPRESS; Integrated Security=True;";
+                connectionString = @$"Data Source={serverName}\SQLEXPRESS; Integrated Security=True;";
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
-                    serverName = serverName + "/SQLEXPRESS";
+                    serverName = serverName + @"/SQLEXPRESS";
                     con.Open();
                 }
                 _dataSourcesName.Add(serverName);
