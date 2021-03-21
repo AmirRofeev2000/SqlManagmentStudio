@@ -2,6 +2,9 @@
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System;
+using System.Net;
+using Microsoft.Win32;
 
 namespace SqlManagmentStudio.Windows.Utilities
 {
@@ -10,27 +13,38 @@ namespace SqlManagmentStudio.Windows.Utilities
         public static List<string> GetDataSourceName()
         {
             List<string> _dataSourcesName = new List<string>();
-            string serverName = System.Net.Dns.GetHostName();
-            string connectionString;
-            try
+            string serverName = Dns.GetHostName();
+            string instanceServerName = default;
+            string connectionString = default;
+
+            using (RegistryKey serverRegistryKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SQL Server"))
+            {
+                string[] serverInstanceName = serverRegistryKey.GetValue("InstalledInstances") as string[];
+                if (serverInstanceName[0] is null)
+                {
+                    return null;
+                }
+
+                instanceServerName = serverInstanceName[0];
+            }
+
+            if (instanceServerName is "MSSQLSERVER")
             {
                 connectionString = $"Data Source={serverName}; Integrated Security=True;";
-                using (SqlConnection con = new SqlConnection(connectionString))
-                {
-                    con.Open();
-                }
-                _dataSourcesName.Add(serverName);
             }
-            catch
+            if (instanceServerName is "SQLEXPRESS")
             {
-                connectionString = @$"Data Source={serverName}\SQLEXPRESS; Integrated Security=True;";
-                using (SqlConnection con = new SqlConnection(connectionString))
-                {
-                    serverName = serverName + @"/SQLEXPRESS";
-                    con.Open();
-                }
+                serverName += @"/SQLEXPRESS";
+                connectionString = $"Data Source={serverName}; Integrated Security=True;";
+            }
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                con.Open();
                 _dataSourcesName.Add(serverName);
             }
+
+
             if (_dataSourcesName.Count > 0)
             {
                 return _dataSourcesName;
