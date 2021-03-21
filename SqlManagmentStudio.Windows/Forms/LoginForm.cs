@@ -14,20 +14,24 @@ namespace SqlManagmentStudio.Windows
         public LoginForm(IServerAuthentication serverAuthentication)
         {
             InitializeComponent();
-
-            string[] dataSourceNames = SqlServerInfo.GetDataSourceName().ToArray();
-            
-            if (dataSourceNames is null)
+            string[] dataSourceNames = null;
+            try
             {
-                MessageBoxWrapper.ShowErrorBox("None Sql Server Instances","No Sql Server Instances were found in your computer");
+                dataSourceNames = SqlServerInfo.GetDataSourceName().ToArray();
+                serverName_Dropdown.Items.AddRange(dataSourceNames);
+                authenticationType_ComboBox.SelectedIndex = 0;
+                serverName_Dropdown.SelectedIndex = 0;
+                _serverAuthentication = serverAuthentication;
             }
-
-            serverName_Dropdown.Items.AddRange(dataSourceNames);
-            authenticationType_ComboBox.SelectedIndex = 0;
-            serverName_Dropdown.SelectedIndex = 0;
-
-            _serverAuthentication = serverAuthentication;
+            catch (Exception)
+            {
+                if (dataSourceNames is null)
+                {
+                    MessageBoxWrapper.ShowErrorBox("None Sql Server Instances", "No Sql Server Instances were found in your computer");
+                }
+            }
         }
+
         public static LoginForm CreateForm(IServerAuthentication serverAuthentication)
         {
             if (_loginForm is null || _loginForm.IsDisposed)

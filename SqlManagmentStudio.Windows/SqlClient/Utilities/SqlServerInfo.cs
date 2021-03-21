@@ -34,7 +34,7 @@ namespace SqlManagmentStudio.Windows.Utilities
             }
             if (instanceServerName is "SQLEXPRESS")
             {
-                serverName += @"/SQLEXPRESS";
+                serverName += @$"\{instanceServerName}";
                 connectionString = $"Data Source={serverName}; Integrated Security=True;";
             }
 
@@ -43,7 +43,6 @@ namespace SqlManagmentStudio.Windows.Utilities
                 con.Open();
                 _dataSourcesName.Add(serverName);
             }
-
 
             if (_dataSourcesName.Count > 0)
             {
