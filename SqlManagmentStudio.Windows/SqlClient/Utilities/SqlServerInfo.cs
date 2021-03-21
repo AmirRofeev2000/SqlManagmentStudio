@@ -9,31 +9,34 @@ namespace SqlManagmentStudio.Windows.Utilities
     {
         public static List<string> GetDataSourceName()
         {
+            List<string> _dataSourcesName = new List<string>();
+            string serverName = System.Net.Dns.GetHostName();
+            string connectionString;
             try
             {
-                List<string> _dataSourcesName = new List<string>();
-                string connectionString = "Data Source=.; Integrated Security=True;";
+                connectionString = $"Data Source={serverName}; Integrated Security=True;";
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand("SELECT @@SERVERNAME AS 'Server Name'", con))
-                    {
-                        using (SqlDataReader dr = cmd.ExecuteReader())
-                        {
-                            while (dr.Read())
-                            {
-                                _dataSourcesName.Add(dr[0].ToString());
-                            }
-                        }
-                    }
-
-                    return _dataSourcesName;
                 }
+                _dataSourcesName.Add(serverName);
             }
             catch
             {
-                return null;
+                connectionString = $"Data Source={serverName}/SQLEXPRESS; Integrated Security=True;";
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    serverName = serverName + "/SQLEXPRESS";
+                    con.Open();
+                }
+                _dataSourcesName.Add(serverName);
             }
+            if (_dataSourcesName.Count > 0)
+            {
+                return _dataSourcesName;
+            }
+
+            return null;
         }
 
         public static string GetSqlServerVersion(string connectionString)
