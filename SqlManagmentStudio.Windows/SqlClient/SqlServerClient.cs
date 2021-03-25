@@ -144,7 +144,7 @@ namespace SqlManagmentStudio.Windows.SqlClient
             TreeNode tableNodeWithColumnNames = new TreeNode(tableName);
 
             SqlCommand command = _sqlConnection.CreateCommand();
-            command.CommandText = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS";
+            command.CommandText = $"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{tableName}'";
             DataTable table = new DataTable(tableName);
             table.Load(command.ExecuteReader());
 
